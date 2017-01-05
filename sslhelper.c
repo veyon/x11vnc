@@ -265,9 +265,14 @@ char *create_tmp_pem(char *pathin, int prompt) {
 ;
 
 	C = strdup("AU");
+#ifdef WIN32
+	L = strdup("Win32");
+	snprintf(line, 1024, "%s-%f", "unknown-node", dnow());
+#else
 	L = strdup(UT.sysname ? UT.sysname : "unknown-os");
 	snprintf(line, 1024, "%s-%f", UT.nodename ? UT.nodename :
 	    "unknown-node", dnow());
+#endif
 	line[1024-1] = '\0';
 
 	OU = strdup(line);

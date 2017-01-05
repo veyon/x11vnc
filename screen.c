@@ -1489,6 +1489,11 @@ char *vnc_reflect_guess(char *str, char **raw_fb_addr) {
 		at++;
 	}
 
+	/* Tobias Doerffel, 2010/10 */
+#define USE_AS_ITALC_DEMO_SERVER
+#ifdef USE_AS_ITALC_DEMO_SERVER
+	client->appData.encodingsString = "raw";
+#endif
 	client->appData.useRemoteCursor = TRUE;
 	client->canHandleNewFBSize = TRUE;
 
@@ -1616,6 +1621,7 @@ void vnc_reflect_process_client(void) {
 }
 
 void linux_dev_fb_msg(char* q) {
+#ifndef WIN32
 	if (strstr(q, "/dev/fb") && strstr(UT.sysname, "Linux")) {
 		rfbLog("\n");
 		rfbLog("On Linux you may need to load a kernel module to enable\n");
@@ -1631,6 +1637,7 @@ void linux_dev_fb_msg(char* q) {
 		rfbLog("and/or /dev/tty*.\n");
 		rfbLog("\n");
 	}
+#endif
 }
 
 #define RAWFB_MMAP 1
@@ -1656,9 +1663,11 @@ XImage *initialize_raw_fb(int reset) {
 		if (last_mode != RAWFB_MMAP && last_mode != RAWFB_FILE) {
 			return NULL;
 		}
+#if LIBVNCSERVER_HAVE_MMAP
 		if (last_mode == RAWFB_MMAP) {
 			munmap(raw_fb_addr, raw_fb_mmap);
 		}
+#endif
 		if (raw_fb_fd >= 0) {
 			close(raw_fb_fd);
 		}
@@ -1679,6 +1688,7 @@ if (db) fprintf(stderr, "initialize_raw_fb reset\n");
 			clean_up_exit(1);
 		}
 		raw_fb_fd = fd;
+#if LIBVNCSERVER_HAVE_MMAP
 		if (last_mode == RAWFB_MMAP) {
 			raw_fb_addr = mmap(0, raw_fb_mmap, PROT_READ,
 			    MAP_SHARED, fd, 0);
@@ -1691,6 +1701,7 @@ if (db) fprintf(stderr, "initialize_raw_fb reset\n");
 				clean_up_exit(1);
 			}
 		}
+#endif
 		return NULL;
 	}
 
@@ -1702,7 +1713,9 @@ if (db) fprintf(stderr, "initialize_raw_fb reset\n");
 
 	if (raw_fb_addr || raw_fb_seek) {
 		if (raw_fb_shm) {
+#if LIBVNCSERVER_HAVE_XSHM || LIBVNCSERVER_HAVE_SHMAT
 			shmdt(raw_fb_addr);
+#endif
 #if LIBVNCSERVER_HAVE_MMAP
 		} else if (raw_fb_mmap) {
 			munmap(raw_fb_addr, raw_fb_mmap);
@@ -2159,6 +2172,7 @@ if (db) fprintf(stderr, "initialize_raw_fb reset\n");
 
 		last_file = strdup(q);
 
+#ifndef WIN32
 		fd = raw_fb_fd;
 		if (fd < 0 && rawfb_dev_video) {
 			fd = open(q, O_RDWR);
@@ -2174,6 +2188,7 @@ if (db) fprintf(stderr, "initialize_raw_fb reset\n");
 			clean_up_exit(1);
 		}
 		raw_fb_fd = fd;
+#endif
 
 		if (raw_fb_native_bpp < 8) {
 			size = w*h*raw_fb_native_bpp/8 + raw_fb_offset;
@@ -4524,7 +4539,14 @@ void watch_loop(void) {
 
 		if (rawfb_vnc_reflect) {
 			static time_t lastone = 0;
-			if (time(NULL) > lastone + 10) {
+
+	/* Tobias Doerffel, 2011/11 */
+#ifdef USE_AS_ITALC_DEMO_SERVER
+			if (1)
+#else
+			if (time(NULL) > lastone + 10)
+#endif
+			{
 				lastone = time(NULL);
 				vnc_reflect_process_client();
 			}
@@ -4549,7 +4571,22 @@ void watch_loop(void) {
 
 		if (! screen || ! screen->clientHead) {
 			/* waiting for a client */
+	/* Tobias Doerffel, 2011/11 */
+#ifdef USE_AS_ITALC_DEMO_SERVER
+			/* when running as demo server, increase main loop delay
+				and instead removed delay between vnc_reflect_process_client()
+				calls above */
+			if( rawfb_vnc_reflect )
+			{
+				usleep(400 * 1000);
+			}
+			else
+			{
+				usleep(200 * 1000);
+			}
+#else
 			usleep(200 * 1000);
+#endif
 			continue;
 		}
 
