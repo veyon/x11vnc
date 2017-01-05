@@ -1919,10 +1919,12 @@ char msg2[] =
 	}
 }
 
+#ifndef SHOW_NO_PASSWORD_WARNING
 #define	SHOW_NO_PASSWORD_WARNING \
 	(!got_passwd && !got_rfbauth && (!got_passwdfile || !passwd_list) \
 	    && !query_cmd && !remote_cmd && !unixpw && !got_gui_pw \
 	    && ! ssl_verify && !inetd && !terminal_services_daemon)
+#endif
 
 static void do_sleepin(char *sleep) {
 	int n1, n2, nt;
