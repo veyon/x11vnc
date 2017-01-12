@@ -68,7 +68,9 @@ so, delete this exception statement from your version.
 #include <fcntl.h>
 #include <ctype.h>
 
+#ifdef HAVE_NETDB_H
 #include <netdb.h>
+#endif
 
 #include "config.h"
 
