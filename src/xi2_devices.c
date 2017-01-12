@@ -23,8 +23,6 @@
 */
 
 #include <string.h>
-#include <X11/Xproto.h> 
-#include <X11/keysym.h> 
 
 #include "x11vnc.h" 
 #include "cursor.h"
