@@ -1491,10 +1491,6 @@ char *vnc_reflect_guess(char *str, char **raw_fb_addr) {
 	}
 
 	/* Tobias Doerffel, 2010/10 */
-#define USE_AS_ITALC_DEMO_SERVER
-#ifdef USE_AS_ITALC_DEMO_SERVER
-	client->appData.encodingsString = "raw";
-#endif
 	client->appData.useRemoteCursor = TRUE;
 	client->canHandleNewFBSize = TRUE;
 
@@ -4553,12 +4549,7 @@ void watch_loop(void) {
 		if (rawfb_vnc_reflect) {
 			static time_t lastone = 0;
 
-	/* Tobias Doerffel, 2011/11 */
-#ifdef USE_AS_ITALC_DEMO_SERVER
-			if (1)
-#else
 			if (time(NULL) > lastone + 10)
-#endif
 			{
 				lastone = time(NULL);
 				vnc_reflect_process_client();
@@ -4584,22 +4575,7 @@ void watch_loop(void) {
 
 		if (! screen || ! screen->clientHead) {
 			/* waiting for a client */
-	/* Tobias Doerffel, 2011/11 */
-#ifdef USE_AS_ITALC_DEMO_SERVER
-			/* when running as demo server, increase main loop delay
-				and instead removed delay between vnc_reflect_process_client()
-				calls above */
-			if( rawfb_vnc_reflect )
-			{
-				usleep(400 * 1000);
-			}
-			else
-			{
-				usleep(200 * 1000);
-			}
-#else
 			usleep(200 * 1000);
-#endif
 			continue;
 		}
 
