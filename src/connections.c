@@ -695,7 +695,7 @@ int run_user_command(char *cmd, rfbClientPtr client, char *mode, char *input,
 
 #if LIBVNCSERVER_HAVE_FORK
 	{
-		pid_t pid, pidw;
+		pid_t pid;
 		struct sigaction sa, intr, quit;
 		sigset_t omask;
 
@@ -711,7 +711,7 @@ int run_user_command(char *cmd, rfbClientPtr client, char *mode, char *input,
 		if ((pid = fork()) > 0 || pid == -1) {
 
 			if (pid != -1) {
-				pidw = waitpid(pid, &rc, 0);
+				waitpid(pid, &rc, 0);
 			}
 
 			sigaction(SIGINT,  &intr, (struct sigaction *) NULL);
@@ -1302,11 +1302,11 @@ static unsigned char t2x2_bits[] = {
 				ip = openssl_last_ip;
 			}
 		}
-		snprintf(strh, 100, "x11vnc: %s connection from %s?", type, ip);
+		snprintf(strh, sizeof strh, "x11vnc: %s connection from %s?", type, ip);
 	} else {
-		snprintf(strh, 100, "x11vnc: client disconnected from %s", addr);
+		snprintf(strh, sizeof strh, "x11vnc: client disconnected from %s", addr);
 	}
-	snprintf(stri, 100, "        (%s)", userhost);
+	snprintf(stri, sizeof stri, "        (%s)", userhost);
 
 	key_o = XKeysymToKeycode(dpy, XStringToKeysym("o"));
 	key_y = XKeysymToKeycode(dpy, XStringToKeysym("y"));
@@ -2581,7 +2581,7 @@ char *get_repeater_string(char *str, int *len) {
 		/* ultravnc repeater http://www.uvnc.com/addons/repeater.html */
 		prestring_len = 250;
 		ptmp = (char *) calloc(prestring_len+1, 1);
-		snprintf(ptmp, 250, "%s", str + strlen("repeater="));
+		snprintf(ptmp, prestring_len, "%s", str + strlen("repeater="));
 		which = 1;
 	} else if (strstr(str, "pre=") == str) {
 		prestring_len = strlen(str + strlen("pre="));
@@ -2662,7 +2662,7 @@ static void reverse_connect_timeout (int sig) {
 
 static int do_reverse_connect(char *str_in) {
 	rfbClientPtr cl;
-	char *host, *p, *str = str_in, *s = NULL;
+	char *host, *p, *str = str_in;
 	char *prestring = NULL;
 	int prestring_len = 0;
 	int rport = 5500, len = strlen(str);
@@ -2691,7 +2691,6 @@ static int do_reverse_connect(char *str_in) {
 		/*   repeater=string+host:port */
 		char *plus = strrchr(str, '+');
 		str = (char *) malloc(strlen(str_in)+1);
-		s = str;
 		*plus = '\0';
 		sprintf(str, "repeater=%s+%s", plus+1, str_in + strlen("repeater://"));
 		prestring = get_repeater_string(str, &prestring_len);
@@ -2766,6 +2765,7 @@ static int do_reverse_connect(char *str_in) {
 		if(strcmp(host, "localhost") && strcmp(host, "127.0.0.1")) {
 			if (!getenv("STUNNEL_DISABLE_LOCALHOST")) {
 				rfbLog("reverse_connect: error host not localhost in -stunnel mode.\n");
+				free(host);
 				return 0;
 			}
 		}
@@ -2786,6 +2786,7 @@ static int do_reverse_connect(char *str_in) {
 				rfbLog("reverse_connect: warning disabling localhost constraint in -unixpw\n");
 			} else {
 				rfbLog("reverse_connect: error not localhost in -unixpw\n");
+				free(host);
 				return 0;
 			}
 		}
@@ -4065,7 +4066,7 @@ enum rfbNewClientAction new_client(rfbClientPtr client) {
         if(use_multipointer)
           {
 	    char tmp[256];
-            snprintf(tmp, 256, "x11vnc %s", client->host);
+            snprintf(tmp, sizeof tmp, "x11vnc %s", client->host);
 
             xi2_device_creation_in_progress = 1;
 
@@ -4083,7 +4084,7 @@ enum rfbNewClientAction new_client(rfbClientPtr client) {
 
             xi2_device_creation_in_progress = 0;
 
-            snprintf(tmp, 256, "%i", cd->uid);
+            snprintf(tmp, sizeof tmp, "%i", cd->uid);
 	    cd->cursor = setClientCursor(dpy, cd->ptr_id, 0.4*(cd->ptr_id%3), 0.2*(cd->ptr_id%5), 1*(cd->ptr_id%2), tmp);
 	    if(!cd->cursor)
               rfbLog("Setting cursor for client %s failed.\n", client->host);
