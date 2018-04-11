@@ -32,6 +32,7 @@ so, delete this exception statement from your version.
 
 /* -- util.c -- */
 
+#include <stdlib.h>
 #include "x11vnc.h"
 #include "cleanup.h"
 #include "win_utils.h"
@@ -240,9 +241,8 @@ void set_env(char *name, char *value) {
 	if (! value) {
 		value = "";
 	}
-	str = (char *) malloc(strlen(name) + 1 + strlen(value) + 1);
-	sprintf(str, "%s=%s", name, value);
-	putenv(str);
+
+	setenv(name, value, 1);
 }
 
 char *bitprint(unsigned int st, int nbits) {
@@ -725,12 +725,11 @@ char *choose_title(char *display) {
 			u = "someone";
 		}
 		strcpy(title, u);
-		if (th == NULL && UT.nodename) {
-			th = UT.nodename;
-		}
-		if (th) {
+		if (th || UT.nodename) {
 			strcat(title, "@");
-			strncat(title, th, MAXN - strlen(title));
+			strncat(title, th ? th : UT.nodename,
+				MAXN - strlen(title));
+			free(th);
 		}
 		return title;
 	}
@@ -746,6 +745,7 @@ char *choose_title(char *display) {
 		char *th = this_host();
 		if (th != NULL) {
 			strncpy(title, th, MAXN - strlen(title));
+			free(th);
 		}
 	}
 	strncat(title, display, MAXN - strlen(title));

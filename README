@@ -1,5 +1,13 @@
 [![Build Status](https://travis-ci.org/LibVNC/x11vnc.svg?branch=master)](https://travis-ci.org/LibVNC/x11vnc)
 
+This is x11vnc with its development continued by LibVNC and the GitHub community.
+While 0.9.13 was the last release by the original author Karl Runge, 0.9.14 was
+the first community-based release here on GitHub.
+
+This repo represents the x11vnc codebase that once resided in the LibVNCServer repo.
+It was split off LibVNCServer and moved here with
+https://github.com/LibVNC/libvncserver/commit/498d222976975f53dea885cfe43ef0f805abd412.
+
 Copyright (C) 2002-2010 Karl J. Runge <runge@karlrunge.com>
 All rights reserved.
 
@@ -14,15 +22,10 @@ The following information is taken from these URLs:
 they contain the most up to date info.
 
 	
-=======================================================================
 http://www.karlrunge.com/x11vnc/index.html:
 
 
-     _________________________________________________________________
-
-x11vnc: a VNC server for real X displays
-                (to FAQ)    (to Downloads)    (to Building)    (to Beta Test)
-  (to Donations) [PayPal] 
+# x11vnc: a VNC server for real X displays
 
    x11vnc allows one to view remotely and interact with real X displays
    (i.e. a display corresponding to a physical monitor, keyboard, and
@@ -75,9 +78,8 @@ x11vnc: a VNC server for real X displays
    a USB memory stick for SSL/SSH VNC viewing from nearly any networked
    computer.
 
-     _________________________________________________________________
 
-    Announcements:
+#   Announcements:
 
    Important: If you created any permanent SSL certificates (e.g. via
    "x11vnc -ssl SAVE ...") on a Debian or Ubuntu system from Sept. 2006
@@ -98,9 +100,8 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
    automatically redirect to the new page since the '#' anchor is not
    sent to the webserver.
 
-     _________________________________________________________________
 
-    Background:
+#   Background:
 
    VNC (Virtual Network Computing) is a very useful network graphics
    protocol (applications running on one computer but displaying their
@@ -109,10 +110,11 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
    framebuffer (RFB) protocol.
 
    Some VNC links:
-     * http://www.realvnc.com
-     * http://www.tightvnc.com
-     * http://www.ultravnc.com/
-     * http://www.testplant.com/products/vine_server/OS_X
+
+   * http://www.realvnc.com
+   * http://www.tightvnc.com
+   * http://www.ultravnc.com/
+   * http://www.testplant.com/products/vine_server/OS_X
 
    For Unix, the traditional VNC implementation includes a "virtual" X11
    server Xvnc (usually launched via the vncserver command) that is not
@@ -130,11 +132,12 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
 
    So the standard Xvnc/vncserver program is very useful, I use it for
    things like:
-     * Desktop conferencing with other users (e.g. code reviews.)
-     * Long running apps/tasks I want to be able to view from many places
-       (e.g. from home and work.)
-     * Motif, GNOME, and similar applications that would yield very poor
-       performance over a high latency link.
+
+   * Desktop conferencing with other users (e.g. code reviews.)
+   * Long running apps/tasks I want to be able to view from many places
+     (e.g. from home and work.)
+   * Motif, GNOME, and similar applications that would yield very poor
+     performance over a high latency link.
 
    However, sometimes one wants to connect to a real X11 display (i.e.
    one attached to a physical monitor, keyboard, and mouse: a Workstation
@@ -143,9 +146,8 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
    an already running application, or would like to help a distant
    colleague solve a problem with their desktop, or would just like to
    work out on the deck for a while. This is where x11vnc is useful.
-     _________________________________________________________________
 
-    How to use x11vnc:
+#   How to use x11vnc:
 
    In this basic example let's assume the remote machine with the X
    display you wish to view is "far-away.east:0" and the workstation you
@@ -167,7 +169,9 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
    in this example) run x11vnc directed at the far-away.east X session
    display:
 
+  ```
   far-away> x11vnc -display :0
+  ```
 
    You could have also set the environment variable DISPLAY=:0 instead of
    using "-display :0". This step attaches x11vnc to the far-away.east:0
@@ -195,6 +199,8 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
 
    When x11vnc starts up there will then be much chatter printed out (use
    "-q" to quiet it), until it finally says something like:
+
+  ```
   .
   .
   13/05/2004 14:59:54 Autoprobing selected port 5900
@@ -202,6 +208,7 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
   13/05/2004 14:59:54
   13/05/2004 14:59:54 The VNC desktop is far-away:0
   PORT=5900
+  ```
 
    which means all is OK, and we are ready for the final step.
 
@@ -216,7 +223,9 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
    In this example we'll use the Unix vncviewer program on sitting-here
    by typing the following command in a second terminal window:
 
+  ```
   sitting-here> vncviewer far-away.east:0
+  ```
 
    That should pop up a viewer window on sitting-here.west showing and
    allowing interaction with the far-away.east:0  X11 desktop. Pretty
@@ -239,14 +248,15 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
 
    Super Shortcut: Here is a potentially very easy way to get all of it
    working.
-     * Have x11vnc (0.9.3 or later) available to run on the remote host
-       (i.e. in $PATH.)
-     * Download and unpack a SSVNC bundle (1.0.19 or later, e.g.
-       ssvnc_no_windows-1.0.28.tar.gz) on the Viewer-side machine.
-     * Start the SSVNC Terminal Services mode GUI: ./ssvnc/bin/tsvnc
-     * Enter your remote username@hostname (e.g. fred@far-away.east) in
-       the "VNC Terminal Server" entry.
-     * Click "Connect".
+
+   * Have x11vnc (0.9.3 or later) available to run on the remote host
+     (i.e. in $PATH.)
+   * Download and unpack a SSVNC bundle (1.0.19 or later, e.g.
+     ssvnc_no_windows-1.0.28.tar.gz) on the Viewer-side machine.
+   * Start the SSVNC Terminal Services mode GUI: ./ssvnc/bin/tsvnc
+   * Enter your remote username@hostname (e.g. fred@far-away.east) in
+     the "VNC Terminal Server" entry.
+   * Click "Connect".
 
    That will do an SSH to username@hostname and start up x11vnc and then
    connect a VNC Viewer through the SSH encrypted tunnel.
@@ -283,9 +293,8 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
    start their VNC viewers. For this usage mode the "-connect
    host1,host2" option may be of use to automatically connect to the
    vncviewers in "-listen" mode on the list of hosts.
-     _________________________________________________________________
 
-    Tunnelling x11vnc via SSH:
+#   Tunnelling x11vnc via SSH:
 
    The above example had no security or privacy at all. When logging into
    remote machines (certainly when going over the internet) it is best to
@@ -294,15 +303,21 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
 
    For x11vnc one can tunnel the VNC protocol through an encrypted ssh
    channel. It would look something like running the following commands:
+
+  ```
   sitting-here> ssh -t -L 5900:localhost:5900 far-away.east 'x11vnc -localhost
 -display :0'
+  ```
 
    (you will likely have to provide passwords/passphrases to login from
    sitting-here into your far-away.east Unix account; we assume you have
    a login account on far-away.east and it is running the SSH server)
 
    And then in another terminal window on sitting-here run the command:
+
+  ```
   sitting-here> vncviewer -encodings "copyrect tight zrle hextile" localhost:0
+  ```
 
    Note: The -encodings option is very important: vncviewer will often
    default to "raw" encoding if it thinks the connection is to the local
@@ -345,7 +360,10 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
    x11vnc. You just need to have x11vnc available in $PATH on the remote
    side (and can SSH to the host), and then on the viewer-side you type
    something like:
+
+  ```
   tsvnc fred@far-away.east
+  ```
 
    everything else is done automatically for you. Normally this will
    start a virtual Terminal Services X session (RAM-only), but if you
@@ -356,7 +374,10 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
    the X display you wish to view (e.g. your company provides incoming
    SSH access to a gateway machine), then you need to change the above
    to, e.g.: "-L 5900:OtherHost:5900":
+
+  ```
   sitting-here> ssh -t -L 5900:OtherHost:5900 gateway.east
+  ```
 
    Where gateway.east is the internet hostname (or IP) of the gateway
    machine (SSH server.) 'OtherHost' might be, e.g., freds-pc or
@@ -393,6 +414,8 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
 
    Suppose you configured the Firewall/Router to redirect these ports to
    two internal machines:
+
+  ```
   Port 12300 -> 192.168.1.3, Port 22 (SSH)
   Port 12301 -> 192.168.1.4, Port 22 (SSH)
 
@@ -402,6 +425,7 @@ to:     http://www.karlrunge.com/x11vnc/faq.html#faq-singleclick
 nc -localhost -display :0'
   sitting-here> ssh -t -p 12301 -L 5900:localhost:5900 fred@far-away.east 'x11v
 nc -localhost -display :0'
+  ```
 
    Where far-away.east means the hostname (or IP) that the
    Router/Firewall is using (for home setups this is usually the IP
@@ -413,7 +437,10 @@ nc -localhost -display :0'
    If you can't remember it, or are otherwise not worried about port
    scanners detecting the presence of your SSH server and there is just
    one internal PC involved you could map 22:
+
+  ```
   Port 22 -> 192.168.1.3, Port 22 (SSH)
+  ```
 
    Again, this SSH gateway access can be done automatically for you via
    the "Proxy/Gateway" setting in SSVNC. And under the "Remote SSH
@@ -429,8 +456,11 @@ nc -localhost -display :0'
    VNC Ports and Firewalls: The above discussion was for configuring the
    Firewall/Router to let in port 22 (SSH), but the same thing can be
    done for the default VNC port 5900:
+
+  ```
   Port 5900 -> 192.168.1.3, Port 5900 (VNC)
   Port 5901 -> 192.168.1.4, Port 5900 (VNC)
+  ```
 
    (where 192.168.1.3 is "jills-pc" and 192.168.1.4 is "freds-pc".) This
    could be used for normal, unencrypted connections and also for SSL
@@ -445,17 +475,22 @@ nc -localhost -display :0'
 
    For a home system one likely does not have a hostname and would have
    to use the IP address, say, "24.56.78.93:0". E.g.:
+
+  ```
   vncviewer 24.56.78.93:0
+  ```
 
    You may want to choose a more obscure port on the router side, e.g.
    5944, to avoid a lot of port scans finding your VNC server. For 5944
    you would tell the viewer to use:
+
+  ```
   vncviewer 24.56.78.93:44
+  ```
 
    The IP address would need to be communicated to the person running the
    VNC Viewer. The site http://www.whatismyip.com/ can help here.
 
-     _________________________________________________________________
 
    Scripts to automate ssh tunneling: As discussed below, there may be
    some problems with port 5900 being available. If that happens, the
@@ -466,10 +501,10 @@ nc -localhost -display :0'
    display is set up) or using the -f option of ssh. Some example scripts
    are shown below. Feel free to try the ssh -C to enable its compression
    and see if that speeds things up noticeably.
-     _________________________________________________________________
 
    #1. A simple example script, assuming no problems with port 5900 being
    taken on the local or remote sides, looks like:
+  ```
 #!/bin/sh
 # usage: x11vnc_ssh <host>:<xdisplay>
 #  e.g.: x11vnc_ssh snoopy.peanuts.com:0
@@ -489,13 +524,15 @@ do
         sleep 2
         if vncviewer -encodings "$enc" :0; then break; fi
 done
+  ```
 
    See also rx11vnc.pl below.
-     _________________________________________________________________
 
    #2. Another method is to start the VNC viewer in listen mode
    "vncviewer -listen" and have x11vnc initiate a reverse connection
    using the -connect option:
+
+  ```
 #!/bin/sh
 # usage: x11vnc_ssh <host>:<xdisplay>
 #  e.g.: x11vnc_ssh snoopy.peanuts.com:0
@@ -513,16 +550,18 @@ vncviewer -encodings "$enc" -listen &
 pid=$!
 ssh -t -R 5500:localhost:5500 $host "$cmd"
 kill $pid
+  ```
 
    Note the use of the ssh option "-R" instead of "-L" to set up a remote
    port redirection.
-     _________________________________________________________________
 
    #3. A third way is specific to the TightVNC vncviewer special option
    -via for gateways. The only tricky part is we need to start up x11vnc
    and give it some time (5 seconds in this example) to start listening
    for connections (so we cannot use the TightVNC default setting for
    VNC_VIA_CMD):
+
+  ```
 #!/bin/sh
 # usage: x11vnc_ssh <host>:<xdisplay>
 #  e.g.: x11vnc_ssh snoopy.peanuts.com:0
@@ -536,12 +575,12 @@ VNC_VIA_CMD="ssh -f -t -L %L:%H:%R %G x11vnc -localhost -rfbport 5900 -display
 export VNC_VIA_CMD
 
 vncviewer -via $host localhost:0      # must be TightVNC vncviewer.
+  ```
 
    Of course if you already have the x11vnc running waiting for
    connections (or have it started out of inetd(8)), you can simply use
    the TightVNC "vncviewer -via gateway host:port" in its default mode to
    provide secure ssh tunnelling.
-     _________________________________________________________________
 
 
 
@@ -562,9 +601,8 @@ vncviewer -via $host localhost:0      # must be TightVNC vncviewer.
    and -localhost options and building x11vnc with tcp_wrappers support
    to limit host access.
 
-     _________________________________________________________________
 
-    Tunnelling x11vnc via SSL/TLS:
+#   Tunnelling x11vnc via SSL/TLS:
 
    One can also encrypt the VNC traffic using an SSL/TLS tunnel such as
    stunnel.mirt.net (also stunnel.org) or using the built-in (Mar/2006)
@@ -579,9 +617,8 @@ vncviewer -via $host localhost:0      # must be TightVNC vncviewer.
    utilities to automatically set up an SSL tunnel from the viewer-side
    (i.e. to connect to "x11vnc -ssl ...".) And many other enhancements
    too.
-     _________________________________________________________________
 
-    Downloading x11vnc:
+#   Downloading x11vnc:
 
    x11vnc is a contributed program to the LibVNCServer project at
    SourceForge.net. I use libvncserver for all of the VNC aspects; I
@@ -601,11 +638,12 @@ vncviewer -via $host localhost:0      # must be TightVNC vncviewer.
 
    VNC Viewers:  To obtain VNC viewers for the viewing side (Windows, Mac
    OS, or Unix) try these links:
-     * http://www.tightvnc.com/download.html
-     * http://www.realvnc.com/download-free.html
-     * http://sourceforge.net/projects/cotvnc/
-     * http://www.ultravnc.com/
-     * Our Enhanced TightVNC Viewer (SSVNC)
+
+   * http://www.tightvnc.com/download.html
+   * http://www.realvnc.com/download-free.html
+   * http://sourceforge.net/projects/cotvnc/
+   * http://www.ultravnc.com/
+   * Our Enhanced TightVNC Viewer (SSVNC)
 
        [ssvnc.gif]
 
@@ -618,12 +656,12 @@ vncviewer -via $host localhost:0      # must be TightVNC vncviewer.
    rx11vnc.pl that attempts to tunnel the vnc traffic through an ssh port
    redirection (and does not assume port 5900 is free.) Have a look at
    them to see what they do and customize as needed:
-     * rx11vnc wrapper script
-     * rx11vnc.pl wrapper script to tunnel traffic thru ssh
 
-     _________________________________________________________________
+   * rx11vnc wrapper script
+   * rx11vnc.pl wrapper script to tunnel traffic thru ssh
 
-    Building x11vnc:
+
+#   Building x11vnc:
 
    Make sure you have all the needed build/compile/development packages
    installed (e.g. Linux distributions foolishly don't install them by
@@ -632,6 +670,8 @@ vncviewer -via $host localhost:0      # must be TightVNC vncviewer.
    If your OS has libjpeg.so and libz.so in standard locations you can
    build as follows (example given for the 0.9.12 release of x11vnc:
    replace with the version you downloaded):
+
+  ```
 (un-tar the x11vnc+libvncserver tarball)
 # gzip -dc x11vnc-0.9.12.tar.gz | tar -xvf -
 
@@ -644,6 +684,7 @@ vncviewer -via $host localhost:0      # must be TightVNC vncviewer.
 
 (if all went OK, copy x11vnc to the desired destination, e.g. $HOME/bin)
 # cp ./x11vnc/x11vnc $HOME/bin
+  ```
 
    Or do make install, it will probably install to /usr/local/bin (run
    ./configure --help for information on customizing your configuration,
@@ -660,6 +701,8 @@ vncviewer -via $host localhost:0      # must be TightVNC vncviewer.
    However, one user reports it does work fine when built with Sun Studio
    10, so YMMV. In fact, here is a little build script to do this on
    Solaris 10:
+
+  ```
 #!/bin/sh
 PATH=/usr/ccs/bin:/opt/SUNWspro/bin:$PATH; export PATH
 
@@ -673,6 +716,7 @@ MAKE="make -e"
 AM_CFLAGS=""
 export MAKE AM_CFLAGS
 $MAKE
+  ```
 
    In general you can use the "make -e" trick if you don't like
    libvncserver's choice of AM_CFLAGS. See the build scripts below for
@@ -682,8 +726,7 @@ $MAKE
 
    You can find information on Misc. Build problems here.
 
-     _________________________________________________________________
-
+ 
    Building on Solaris, FreeBSD, etc:   Depending on your version of
    Solaris or other Unix OS the jpeg and/or zlib libraries may be in
    non-standard places (e.g. /usr/local, /usr/sfw, /opt/sfw, etc.)
@@ -697,7 +740,10 @@ $MAKE
    Shortcuts: On Solaris 10 you can pick up almost everything just by
    insuring that your PATH has /usr/sfw/bin (for gcc) and /usr/ccs/bin
    (for other build tools), e.g.:
+
+  ```
   env PATH=/usr/sfw/bin:/usr/ccs/bin:$PATH sh -c './configure; make'
+  ```
 
    (The only thing this misses is /usr/X11/lib/libXrandr.so.2, which is
    for the little used -xrandr option, see the script below to pick it up
@@ -708,8 +754,11 @@ $MAKE
    /usr/sfw/lib), and zlib in Solaris 8 and later (/usr/include and
    /usr/lib.) So on Solaris 9 you can pick up everything with something
    like this:
+
+  ```
   env PATH=/usr/local/bin:/usr/ccs/bin:$PATH sh -c './configure --with-jpeg=/us
 r/sfw; make'
+  ```
 
    assuming your gcc is in /usr/local/bin and x11vnc 0.7.1 or later.
    These are getting pretty long, see those assignments split up in the
@@ -728,8 +777,8 @@ r/sfw; make'
    Here is a build script that indicates one way to pass the library
    locations information to the libvncserver configuration via the
    CPPFLAGS and LDFLAGS environment variables.
----8<---8<---8<---8<---8<---8<---8<---8<---8<---8<---8<---8<---8<---8<---8<---8
-<---
+
+  ```
 #!/bin/sh
 
 # Build script for Solaris, etc, with gcc, libjpeg and libz in
@@ -769,9 +818,7 @@ export PATH CPPFLAGS LDFLAGS
 make
 
 ls -l ./x11vnc/x11vnc
-
----8<---8<---8<---8<---8<---8<---8<---8<---8<---8<---8<---8<---8<---8<---8<---8
-<---
+  ```
 
    Then do make install or copy the x11vnc binary to your desired
    destination.
@@ -799,9 +846,11 @@ ls -l ./x11vnc/x11vnc
    /usr/local or /usr/pkg on these OS's. You won't need the openwin stuff
    in the above script (but you may need /usr/X11R6/....) Also starting
    with the 0.7.1 x11vnc release, this usually works:
+
+  ```
   ./configure --with-jpeg=/usr/local
   make
-
+  ```
 
    Building on HP-UX:   For jpeg and zlib you will need to do the same
    sort of thing as described above for Solaris. You set CPPFLAGS and
@@ -815,8 +864,11 @@ ls -l ./x11vnc/x11vnc
    get "lost".)
 
    Here is what we recently did to build x11vnc 0.7.2 on HP-UX 11.11
+
+  ```
 ./configure --with-jpeg=$HOME/hpux/jpeg --with-zlib=$HOME/hpux/zlib
 make
+  ```
 
    Where we had static archives (libjpeg.a, libz.a) only and header files
    in the $HOME/hpux/... directories as discussed for the build script.
@@ -825,8 +877,11 @@ make
    "/usr/include/rpc/auth.h:87: error: field 'syncaddr' has incomplete
    type". As a workaround for x11vnc 0.9.4 and later set your CPPFLAGS to
    include:
+
+  ```
   CPPFLAGS="-DIGNORE_GETSPNAM"
   export CPPFLAGS
+  ```
 
    This disables a very rare usage mode for -unixpw_nis by not trying
    getspnam(3).
@@ -855,8 +910,11 @@ make
    Building on Mac OS X:   There is now native Mac OS X support for
    x11vnc by using the raw framebuffer feature. This mode does not use or
    need X11 at all. To build you may need to disable X11:
+
+  ```
 ./configure --without-x ...
 make
+  ```
 
    However, if your system has the Mac OS X build package for X11 apps
    you will not need to supply the "--without-x" option (in this case the
@@ -883,12 +941,13 @@ make
    On Solaris using static archives libssl.a and libcrypto.a instead of
    .so shared libraries (e.g. from www.sunfreeware.com), we found we
    needed to also set LDFLAGS as follows to get the configure to work:
+
+  ```
 env LDFLAGS='-lsocket -ldl' ./configure --with-ssl=/path/to/openssl ...
 make
+  ```
 
-     _________________________________________________________________
-
-    Beta Testing:
+#   Beta Testing:
 
    I don't have any formal beta-testers for the releases of x11vnc, so
    I'd appreciate any additional testing very much.
@@ -918,6 +977,7 @@ make
 
 
    Here are some features that will appear in the 0.9.13 release:
+
      * Improved support for non-X11 touchscreen devices (e.g. handheld or
        cell phone) via Linux uinput input injection. Additional tuning
        parameters are added. TSLIB touchscreen calibration is supported.
@@ -965,6 +1025,7 @@ make
 
 
    Here are some features that appeared in the 0.9.12 release (Sep/2010):
+
      * One can now specify the maximum number of displays that can be
        created in -create mode via the env. var.
        X11VNC_CREATE_MAX_DISPLAYS
@@ -978,6 +1039,7 @@ make
 
 
    Here are some features that appeared in the 0.9.11 release (Aug/2010):
+
      * The source tree is synchronized with the most recent libvncclient
        (this only affects -reflect mode.) Build is fixed for
        incompatibilities when using an external LibVNCServer (e.g.
@@ -994,6 +1056,7 @@ make
 
 
    Here are some features that appeared in the 0.9.10 release (May/2010):
+
      * The included SSL enabled Java applet viewer now supports Chained
        SSL Certificates. The debugCerts=yes applet parameter aids
        troubleshooting certificate validation. The x11vnc -ssl mode has
@@ -1045,6 +1108,7 @@ make
 
 
    Here are some features that appeared in the 0.9.9 release (Dec/2009):
+
      * The -unixpw_system_greeter option, when used in combined unixpw
        and XDMCP FINDCREATEDISPLAY mode (for example: -xdmsvc), enables
        the user to press Escape to jump directly to the XDM/GDM/KDM login
@@ -1114,6 +1178,7 @@ make
 
 
    Here are some features that appeared in the 0.9.8 release (Jul/2009):
+
      * Stability improvements to -threads mode. Running x11vnc this way
        is more reliable now. Threaded operation sometimes gives better
        interactive response and faster updates: try it out. The threaded
@@ -1139,6 +1204,7 @@ make
 
 
    Here are some features that appeared in the 0.9.7 release (Mar/2009):
+
      * Support for polling Linux Virtual Terminals (also called virtual
        consoles) directly instead of using /dev/fb. The option to use is,
        for example, "-rawfb vt2" for Virtual Terminal 2, etc. In this
@@ -1162,6 +1228,7 @@ make
 
 
    Here are some features that appeared in the 0.9.6 release (Dec/2008):
+
      * Support for VeNCrypt SSL/TLS encrypted connections. It is enabled
        by default in the -ssl mode. VNC Viewers like vinagre,
        gvncviewer/gtk-vnc, the vencrypt package, SSVNC, and others
@@ -1229,6 +1296,7 @@ LAY
 
 
    Here are some features that appeared in the 0.9.5 release (Oct/2008):
+
      * Symmetric key encryption ciphers. ARC4, AES-128, AES-256,
        blowfish, and 3des are supported. Salt and initialization vector
        seeding is provided. These compliment the more widely used SSL and
@@ -1250,6 +1318,7 @@ LAY
 
 
    Here are some features that appeared in the 0.9.4 release (Sep/2008):
+
      * Improvements to the -find and -create X session finding or
        creating modes: new desktop types and service redirection options.
        Personal cupsd daemon and SSH port redirection helper for use with
@@ -1294,6 +1363,7 @@ LAY
 
 
    Here are some features that appeared in the 0.9.3 release (Oct/2007):
+
      * Viewer-side pixmap caching. A large area of pixels (at least 2-3
        times as big as the framebuffer itself; the bigger the better...
        default is 10X) is placed below the framebuffer to act as a
@@ -1307,6 +1377,7 @@ LAY
 
 
    Here are some features that appeared in the 0.9.2 release (Jun/2007):
+
      * Building with no OpenSSL libssl available (or with --without-ssl)
        has been fixed.
      * One can configure x11vnc via "./configure
@@ -1322,6 +1393,7 @@ LAY
 
 
    Here are some features that appeared in the 0.9.1 release (May/2007):
+
      * The UltraVNC Java viewer has been enhanced to support SSL (as the
        TightVNC viewer had been previously.) The UltraVNC Java supports
        ultravnc filetransfer, and so can be used as a VNC viewer on Unix
@@ -1347,6 +1419,7 @@ LAY
 
 
    Here are some features that appeared in the 0.9 release (Apr/2007):
+
      * VNC Service advertising via mDNS / ZeroConf / BonJour with the
        Avahi client library. Enable via "-avahi" or "-zeroconf".
      * Implementations of UltraVNC's TextChat, SingleWindow, and
@@ -1371,6 +1444,7 @@ LAY
 
 
    Here are some features that appeared in the 0.8.4 release (Feb/2007):
+
      * Native Mac OS X Aqua/Quartz support. (i.e. OSXvnc alternative;
        some activities are faster)
      * A new login mode: "-display WAIT:cmd=FINDCREATEDISPLAY -unixpw
@@ -1405,6 +1479,7 @@ LAY
 
 
    Here are some features that appeared in the 0.8.3 release (Nov/2006):
+
      * The -ssl option provides SSL encryption and authentication
        natively via the www.openssl.org library. One can use from a
        simple self-signed certificate server certificate up to full CA
@@ -1457,10 +1532,9 @@ LAY
        "-v") to turn it back on for debugging or if you are going to send
        me a problem report.
 
-   Here are some Previous Release Notes
-     _________________________________________________________________
+#  Here are some Previous Release Notes
 
-    Some Notes:
+##  Some Notes:
 
    Both a client and a server:   It is sometimes confusing to people that
    x11vnc is both a client and a server at the same time. It is an X
@@ -1495,8 +1569,11 @@ LAY
    to take advantage of this encoding.
 
    TCP port issues:   Notice the lines
+
+  ```
   18/07/2003 14:36:31 Autoprobing selected port 5900
   PORT=5900
+  ```
 
    in the output. 5900 is the default VNC listening port (just like 6000
    is X11's default listening port.) Had port 5900 been taken by some
@@ -1545,16 +1622,14 @@ LAY
    XBell "beeps" once, you get an infinite loop of beeps going off.
    Although all of this is mildly exciting it is not much use: you will
    normally run and display the viewer on a different machine!
-     _________________________________________________________________
 
-    Sun Ray Notes:
+##  Sun Ray Notes:
 
    You can run x11vnc on your (connected or disconnected) SunRay session.
    Here are some notes on SunRay usage with x11vnc.
 
-     _________________________________________________________________
 
-    Limitations:
+##  Limitations:
 
      * Due to the polling nature, some activities (opaque window moves,
        scrolling), can be pretty choppy/ragged and others (exposures of
@@ -1657,14 +1732,10 @@ LAY
    Also, some people ask if they can make a donation, see this link for
    that.
 	
-=======================================================================
 http://www.karlrunge.com/x11vnc/faq.html:
 
 
-   x11vnc Home    Donations
-     _________________________________________________________________
-
-    x11vnc FAQ:
+#   x11vnc FAQ:
 
 
    [Building and Starting]
@@ -6954,7 +7025,7 @@ EndSection
        physical display the keysym dead_tilde is pressed and released
        (this usually involves holding AltGr down while another key is
        pressed) and then space is pressed. (this can also be used get
-       characters with the "~" symbol on top, e.g. "ã" by typing "a"
+       characters with the "~" symbol on top, e.g. "\E3" by typing "a"
        instead of space.)
        What to do? In general the VNC protocol has not really solved this
        problem: what should be done if the VNC viewer sends a keysym not
