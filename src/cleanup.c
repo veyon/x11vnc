@@ -706,11 +706,7 @@ void initialize_signals(void) {
 	signal(SIGHUP,  interrupted);
 	signal(SIGINT,  interrupted);
 	signal(SIGQUIT, interrupted);
-	signal(SIGABRT, interrupted);
 	signal(SIGTERM, interrupted);
-	signal(SIGBUS,  interrupted);
-	signal(SIGSEGV, interrupted);
-	signal(SIGFPE,  interrupted);
 
 	if (!sigpipe || *sigpipe == '\0' || !strcmp(sigpipe, "skip")) {
 		;
