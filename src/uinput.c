@@ -113,6 +113,8 @@ static int dragskip = 0;
 static int touch_always = 0;
 static int touch_pressure = 1;
 static int abs_x = 0, abs_y = 0;
+static int multitouch = 0;
+static int tracking_id = 1;
 
 static char *devs[] = {
 	"/dev/misc/uinput",
@@ -430,6 +432,8 @@ int initialize_uinput(void) {
 	ioctl(fd, UI_SET_EVBIT, EV_REL);
 	ioctl(fd, UI_SET_RELBIT, REL_X);
 	ioctl(fd, UI_SET_RELBIT, REL_Y);
+	ioctl(fd, UI_SET_RELBIT, REL_WHEEL);
+	ioctl(fd, UI_SET_RELBIT, REL_WHEEL_HI_RES);
 
 	ioctl(fd, UI_SET_EVBIT, EV_KEY);
 
@@ -703,6 +707,8 @@ void parse_uinput_str(char *in) {
 			}
 		} else if (strstr(p, "tslib_cal=") == p) {
 			tslib_cal = strdup(p+strlen("tslib_cal="));
+		} else if (strstr(p, "multitouch") == p) {
+			multitouch = 1;
 		} else {
 			rfbLog("invalid UINPUT option: %s\n", p);
 			clean_up_exit(1);
@@ -795,6 +801,18 @@ static void ptr_abs(int x, int y, int p) {
 	ev.value = x;
 	write(d, &ev, sizeof(ev));
 
+	if (multitouch) {
+		ev.type = EV_ABS;
+		ev.code = ABS_MT_POSITION_Y;
+		ev.value = y;
+		write(d, &ev, sizeof(ev));
+
+		ev.type = EV_ABS;
+		ev.code = ABS_MT_POSITION_X;
+		ev.value = x;
+		write(d, &ev, sizeof(ev));
+	}
+
 	if (p >= 0) {
 		ev.type = EV_ABS;
 		ev.code = ABS_PRESSURE;
@@ -805,6 +823,17 @@ static void ptr_abs(int x, int y, int p) {
 			ev.type = EV_KEY;
 			ev.code = BTN_TOUCH;
 			ev.value = p ? 1 : 0;
+			write(d, &ev, sizeof(ev));
+		}
+
+		if (multitouch) {
+			ev.type = EV_ABS;
+			ev.code = ABS_MT_TRACKING_ID;
+			if (p==0){
+				ev.value = -1;
+			} else {
+				ev.value = tracking_id++;
+			}
 			write(d, &ev, sizeof(ev));
 		}
 	}
@@ -987,9 +1016,19 @@ static void button_click(int down, int btn) {
 	} else if (btn == 3) {
 		ev.code = BTN_RIGHT;
 	} else if (btn == 4) {
-		ev.code = BTN_FORWARD;
+		ev.code = REL_WHEEL;
+		ev.type = EV_REL;
+		ev.value = 1;
+		write(d, &ev, sizeof(ev));
+		ev.code = REL_WHEEL_HI_RES;
+		ev.value = 120;
 	} else if (btn == 5) {
-		ev.code = BTN_BACK;
+		ev.code = REL_WHEEL;
+		ev.type = EV_REL;
+		ev.value = -1;
+		write(d, &ev, sizeof(ev));
+		ev.code = REL_WHEEL_HI_RES;
+		ev.value = -120;
 	} else {
 		return;
 	}
