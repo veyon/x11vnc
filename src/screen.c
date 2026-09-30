@@ -4635,6 +4635,7 @@ void watch_loop(void) {
 
 		if (shut_down) {
 			clean_up_exit(0);
+			return;
 		}
 
 		if (unixpw_in_progress) {
